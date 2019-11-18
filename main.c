@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
-#include <SDL/SDL2.h>
+#include <SDL.h>
 
 #define WIDTH 640
 #define HEIGHT 480
 
 SDL_Window * window;
 SDL_Renderer * render;
-
 
 
 
@@ -23,38 +22,43 @@ char xadrez [8][8] = {
     { 't','c','b','q','k','b','c','t' }
 };
 
-int init_graficos() {
-	if (SDL_Init(SDL_INIT_EVERYTHING) >=0 ) {
-		printf("\n Inicializou o SDL...");
-		window = SDL_CreateWindow("X A D R E Z",
-		50, 50, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-	}
-	if (window != NULL) {
-		printf("\n Janela Inicializada com sucesso \n");
-		render = SDL_CreateRenderer(window, -1, 0);
-		if(render != NULL){
-			else{
-				printf("Erro ao criar o render...\n");
-			}
-		}
-		else{
-			printf("Erro ao criar a janela... \n");
-		}
-	}
-	else {
-		printf("Erro ao iniciar o SDL...\n");
-	}
+int init_graficos(){
 
+	if (SDL_Init( SDL_INIT_EVERYTHING ) >= 0 ) {
+            printf("\n Inicializou o SDL...");
+        window = SDL_CreateWindow("X A D R E Z",
+        50, 50, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+
+        if (window != NULL) {
+            render = SDL_CreateRenderer(window, -1, 0);
+            if (render != NULL) {
+			}
+
+    }
+	}
 }
 
+
 int pintarTela(){
+    int w = WIDTH / 8;
+    int h = HEIGHT / 8;
     int lin, col;
 
-    SDL_SetRenderDrawColor( render, 0, 255, 0, 255);
+
+    SDL_SetRenderDrawColor( render, 0, 0, 0, 255);
     SDL_RenderClear(render);
 
     for (lin = 0; lin < 8 ; lin++) {
         for(col=0; col < 8; col++) {
+            if ((col + lin) % 2 == 0){
+                SDL_SetRenderDrawColor( render, 0, 0, 0, 255);
+            } else{
+                SDL_SetRenderDrawColor( render, 255, 255, 0, 255);
+            }
+            int x = col * w;
+            int y = lin * h;
+            SDL_Rect r = {x, y, w, h};
+            SDL_RenderFillRect(render, &r);
         }
     }
 
@@ -130,7 +134,7 @@ int moverPeca ( int linOri, int colOri, int linDes, int colDes){
 				return 1;	// Movimento realizado
 			}
 				else {
-					return 9; // Peça nao pode ser movida deste jeito
+					return 9; // PeÃ§a nao pode ser movida deste jeito
 				}
 	}
 	else {
@@ -173,4 +177,3 @@ int main(int argc, char ** args){
     getch();
 	return 0;
 }
-
